@@ -1,0 +1,55 @@
+plugins {
+    id "java"
+    id "maven-publish"
+}
+
+group = "com.github.echolightmc"
+version = "1.0-SNAPSHOT"
+
+repositories {
+    mavenCentral()
+    maven {
+        url = "https://jitpack.io"
+    }
+}
+
+dependencies {
+    compileOnly "net.minestom:minestom-snapshots:8736fc43d8"
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = group
+            artifactId = rootProject.name
+            version = this.version
+            from components.java
+
+            pom {
+                name = artifactId
+                description = "Custom NameTag system using text displays for Minestom"
+            }
+        }
+    }
+    repositories {
+        maven {
+            credentials {
+                username = "$repoHapilyUsername"
+                password = "$repoHapilyPassword"
+            }
+
+            url = "https://maven.hapily.me/releases"
+        }
+    }
+}
