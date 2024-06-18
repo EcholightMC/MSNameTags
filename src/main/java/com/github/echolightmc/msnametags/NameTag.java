@@ -38,20 +38,39 @@ public class NameTag extends Entity {
 		mount();
 	}
 
+	/**
+	 * @return the content of this nametag
+	 */
 	public Component getText() {
 		return textMeta.getText();
 	}
 
+	/**
+	 * @param text the new content of this nametag
+	 */
 	public void setText(Component text) {
 		textMeta.setText(text);
 	}
 
+	/**
+	 * @return the translation from the passenger point of the owner of this nametag to display this at
+	 */
 	public Point getTranslation() {
 		return textMeta.getTranslation();
 	}
 
+	/**
+	 * @param point the new translation from the passenger point of the owner of this nametag to display this at
+	 */
 	public void setTranslation(Point point) {
 		textMeta.setTranslation(point);
+	}
+
+	/**
+	 * @return the owner of this nametag (what this is riding)
+	 */
+	public Entity getOwningEntity() {
+		return owningEntity;
 	}
 
 	@Override
@@ -66,20 +85,16 @@ public class NameTag extends Entity {
 			if (player == owningEntity) continue;
 			Set<Player> viewers = getViewers();
 			if (!viewers.contains(player) && (owningEntity.isViewer(player) && !owningEntity.isSneaking())) {
-				revealTo(player);
+				addViewer(player);
 			} else if (viewers.contains(player) && (!owningEntity.isViewer(player) || owningEntity.isSneaking())){
-				hideFrom(player);
+				removeViewer(player);
 			}
 		}
 	}
 
-	public void hideFrom(Player player) {
-		removeViewer(player);
-	}
-
 	@SuppressWarnings("UnstableApiUsage")
-	public void revealTo(Player player) {
-		addViewer(player);
+	@Override
+	public void updateNewViewer(@NotNull Player player) {
 		player.sendPacket(NameTagManager.getPassengersPacket(owningEntity));
 	}
 
