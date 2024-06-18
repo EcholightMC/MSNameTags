@@ -22,8 +22,6 @@ public class NameTag extends Entity {
 	NameTag(Entity owningEntity, boolean transparentBackground) {
 		super(EntityType.TEXT_DISPLAY);
 		this.owningEntity = owningEntity;
-		hasPhysics = false;
-		hasCollision = false;
 		textMeta = getEntityMeta();
 		textMeta.setNotifyAboutChanges(false);
 		textMeta.setBillboardRenderConstraints(AbstractDisplayMeta.BillboardConstraints.VERTICAL);
