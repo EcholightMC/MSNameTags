@@ -28,26 +28,8 @@ repositories {
 ```gradle
 dependencies {
   ..
-  implementation "com.github.echolightmc:MSNameTags:1.0-SNAPSHOT"
+  implementation("com.github.echolightmc:MSGuis:1.0-SNAPSHOT") {
+    exclude group: "net.minestom", module: "minestom-snapshots"
+  }
 }
-```
-### Maven
-```xml
-<repositories>
-  ..
-  <repository>
-    <id>hapily-repository-releases</id>
-    <url>https://maven.hapily.me/releases</url>
-  </repository>
-</repositories>
-```
-```xml
-<dependencies>
-  ..
-  <dependency>
-    <groupId>com.github.echolightmc</groupId>
-    <artifactId>MSNameTags</artifactId>
-    <version>1.0-SNAPSHOT</version>
-  </dependency>
-</dependencies>
 ```
