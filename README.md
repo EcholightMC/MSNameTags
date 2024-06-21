@@ -12,7 +12,7 @@ globalEventHandler.addListener(PlayerSpawnEvent.class, event -> {
   NameTag playerNameTag = nameTagManager.createNameTag(player);
   playerNameTag.setText(miniMessage.deserialize("<red><b>OWNER</b> " + player.getUsername()));
   playerNameTag.addViewer(player); // add viewer to see own nametag, otherwise leave this out
-  playerNameTag.mount(); // initial mount
+  playerNameTag.mount(); // initial mount, required since we just added player as viewer otherwise nametag will appear stagnant for this player
 });
 ```
 ## Add as Dependency
@@ -28,7 +28,7 @@ repositories {
 ```gradle
 dependencies {
   ..
-  implementation("com.github.echolightmc:MSGuis:1.1-SNAPSHOT") {
+  implementation("com.github.echolightmc:MSNameTags:1.1-SNAPSHOT") {
     exclude group: "net.minestom", module: "minestom-snapshots"
   }
 }
