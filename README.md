@@ -28,7 +28,7 @@ repositories {
 ```gradle
 dependencies {
   ..
-  implementation("com.github.echolightmc:MSGuis:1.0-SNAPSHOT") {
+  implementation("com.github.echolightmc:MSGuis:1.1-SNAPSHOT") {
     exclude group: "net.minestom", module: "minestom-snapshots"
   }
 }
