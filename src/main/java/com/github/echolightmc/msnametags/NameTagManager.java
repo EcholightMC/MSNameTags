@@ -23,6 +23,10 @@ import java.util.function.Function;
 public class NameTagManager {
 
 	private static final Tag<NameTag> NAME_TAG = Tag.Transient("msnametags.name-tag");
+	/**
+	 * Tag to be set on entities which type is a player, so it can be properly added to its team.
+	 */
+	public static final Tag<String> USERNAME_TAG = Tag.String("msnametags-username");
 
 	private final Function<Entity, Team> teamCallback;
 
@@ -110,7 +114,7 @@ public class NameTagManager {
 		nameTagTeam.setNameTagVisibility(TeamsPacket.NameTagVisibility.NEVER);
 		if (entity.getEntityType() == EntityType.PLAYER) {
 			if (entity instanceof Player player) nameTagTeam.addMember(player.getUsername());
-			else if (entity instanceof PlayerLikeEntity playerLikeEntity) nameTagTeam.addMember(playerLikeEntity.getUsername());
+			else if (entity.hasTag(USERNAME_TAG)) nameTagTeam.addMember(entity.getTag(USERNAME_TAG));
 		} else nameTagTeam.addMember(entity.getUuid().toString());
 		return nameTag;
 	}
