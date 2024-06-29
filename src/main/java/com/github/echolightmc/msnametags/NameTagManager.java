@@ -4,6 +4,7 @@ import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.Player;
+import net.minestom.server.event.Event;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.event.EventNode;
 import net.minestom.server.event.entity.EntityDespawnEvent;
@@ -31,7 +32,7 @@ public class NameTagManager {
 	private final Function<Entity, Team> teamCallback;
 
 	@SuppressWarnings("UnstableApiUsage")
-	public NameTagManager(EventNode<EntityEvent> node, Function<Entity, Team> teamCallback) {
+	public NameTagManager(EventNode<Event> node, Function<Entity, Team> teamCallback) {
 		this.teamCallback = teamCallback;
 		EventListener<PlayerRespawnEvent> respawnListener = EventListener.builder(PlayerRespawnEvent.class)
 				.handler(event -> {
