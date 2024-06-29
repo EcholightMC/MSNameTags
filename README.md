@@ -8,7 +8,6 @@ MiniMessage miniMessage = MiniMessage.miniMessage();
 GlobalEventHandler eventHandler = MinecraftServer.getGlobalEventHandler();
 TeamManager teamManager = MinecraftServer.getTeamManager();
 Team nameTagTeam = new TeamBuilder("name-tags", teamManager)
-						   .nameTagVisibility(TeamsPacket.NameTagVisibility.NEVER)
 						   .collisionRule(TeamsPacket.CollisionRule.NEVER)
 						   .build();
 NameTagManager nameTagManager = new NameTagManager(eventHandler, entity -> nameTagTeam);
@@ -33,7 +32,7 @@ repositories {
 ```gradle
 dependencies {
   ..
-  implementation("com.github.echolightmc:MSNameTags:1.2-SNAPSHOT") {
+  implementation("com.github.echolightmc:MSNameTags:1.3-SNAPSHOT") {
     exclude group: "net.minestom", module: "minestom-snapshots"
   }
 }
