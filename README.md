@@ -6,7 +6,12 @@ Simple nametag library for Minestom using text displays, handling the tracking a
 ```java
 MiniMessage miniMessage = MiniMessage.miniMessage();
 GlobalEventHandler eventHandler = MinecraftServer.getGlobalEventHandler();
-NameTagManager nameTagManager = new NameTagManager(eventHandler);
+TeamManager teamManager = MinecraftServer.getTeamManager();
+Team nameTagTeam = new TeamBuilder("name-tags", teamManager)
+						   .nameTagVisibility(TeamsPacket.NameTagVisibility.NEVER)
+						   .collisionRule(TeamsPacket.CollisionRule.NEVER)
+						   .build();
+NameTagManager nameTagManager = new NameTagManager(eventHandler, entity -> nameTagTeam);
 globalEventHandler.addListener(PlayerSpawnEvent.class, event -> {
   Player player = event.getPlayer();
   NameTag playerNameTag = nameTagManager.createNameTag(player);
@@ -28,7 +33,7 @@ repositories {
 ```gradle
 dependencies {
   ..
-  implementation("com.github.echolightmc:MSNameTags:1.1-SNAPSHOT") {
+  implementation("com.github.echolightmc:MSNameTags:1.2-SNAPSHOT") {
     exclude group: "net.minestom", module: "minestom-snapshots"
   }
 }
