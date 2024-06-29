@@ -10,7 +10,6 @@ import net.minestom.server.event.EventNode;
 import net.minestom.server.event.entity.EntityDespawnEvent;
 import net.minestom.server.event.entity.EntitySpawnEvent;
 import net.minestom.server.event.player.PlayerRespawnEvent;
-import net.minestom.server.event.trait.EntityEvent;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.network.packet.server.play.SetPassengersPacket;
 import net.minestom.server.network.packet.server.play.TeamsPacket;

@@ -22,6 +22,8 @@ public class NameTag extends Entity {
 	NameTag(Entity owningEntity, boolean transparentBackground) {
 		super(EntityType.TEXT_DISPLAY);
 		this.owningEntity = owningEntity;
+		hasPhysics = false;
+		hasCollision = false;
 		textMeta = getEntityMeta();
 		textMeta.setNotifyAboutChanges(false);
 		textMeta.setBillboardRenderConstraints(AbstractDisplayMeta.BillboardConstraints.VERTICAL);
@@ -93,7 +95,8 @@ public class NameTag extends Entity {
 	@SuppressWarnings("UnstableApiUsage")
 	@Override
 	public void updateNewViewer(@NotNull Player player) {
-		player.sendPacket(NameTagManager.getPassengersPacket(owningEntity));
+		super.updateNewViewer(player);
+		player.sendPacket(NameTagManager.getPassengersPacket(owningEntity)); // necessary otherwise it's not a passenger visually
 	}
 
 	/**
@@ -102,8 +105,10 @@ public class NameTag extends Entity {
 	 * {@link net.minestom.server.instance.Instance} as the owning player.
 	 */
 	public void mount() {
-		setInstance(owningEntity.getInstance(), owningEntity.getPosition().asVec());
-		owningEntity.addPassenger(this);
+		setInstance(owningEntity.getInstance(), owningEntity.getPosition()).whenComplete((unused, throwable) -> {
+			if (throwable != null) throwable.printStackTrace();
+			else owningEntity.addPassenger(this);
+		});
 	}
 
 }
