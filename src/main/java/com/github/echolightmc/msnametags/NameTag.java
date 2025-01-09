@@ -23,7 +23,7 @@ public class NameTag extends Entity {
 		super(EntityType.TEXT_DISPLAY);
 		this.owningEntity = owningEntity;
 		hasPhysics = false;
-		hasCollision = false;
+		collidesWithEntities = false;
 		textMeta = getEntityMeta();
 		textMeta.setNotifyAboutChanges(false);
 		textMeta.setBillboardRenderConstraints(AbstractDisplayMeta.BillboardConstraints.VERTICAL);
