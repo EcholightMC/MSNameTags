@@ -106,7 +106,7 @@ public class NameTag extends Entity {
 	 */
 	public void mount() {
 		boolean ownerWasViewer = owningEntity instanceof Player player && isViewer(player);
-		setInstance(owningEntity.getInstance(), owningEntity.getPosition()).whenComplete((unused, throwable) -> {
+		setInstance(owningEntity.getInstance(), owningEntity.getPosition().withView(0, 0)).whenComplete((unused, throwable) -> {
 			if (throwable != null) throwable.printStackTrace();
 			else {
 				owningEntity.addPassenger(this);
