@@ -105,9 +105,13 @@ public class NameTag extends Entity {
 	 * {@link net.minestom.server.instance.Instance} as the owning player.
 	 */
 	public void mount() {
+		boolean ownerWasViewer = owningEntity instanceof Player player && isViewer(player);
 		setInstance(owningEntity.getInstance(), owningEntity.getPosition()).whenComplete((unused, throwable) -> {
 			if (throwable != null) throwable.printStackTrace();
-			else owningEntity.addPassenger(this);
+			else {
+				owningEntity.addPassenger(this);
+				if (ownerWasViewer) addViewer((Player) owningEntity);
+			}
 		});
 	}
 
