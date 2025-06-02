@@ -8,6 +8,7 @@ import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.Player;
 import net.minestom.server.entity.metadata.display.AbstractDisplayMeta;
 import net.minestom.server.entity.metadata.display.TextDisplayMeta;
+import net.minestom.server.instance.Instance;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -105,8 +106,10 @@ public class NameTag extends Entity {
 	 * {@link net.minestom.server.instance.Instance} as the owning player.
 	 */
 	public void mount() {
+		Instance owningInstance = owningEntity.getInstance();
+		if (owningInstance == null) return;
 		boolean ownerWasViewer = owningEntity instanceof Player player && isViewer(player);
-		setInstance(owningEntity.getInstance(), owningEntity.getPosition().withView(0, 0)).whenComplete((unused, throwable) -> {
+		setInstance(owningInstance, owningEntity.getPosition().withView(0, 0)).whenComplete((unused, throwable) -> {
 			if (throwable != null) throwable.printStackTrace();
 			else {
 				owningEntity.addPassenger(this);
