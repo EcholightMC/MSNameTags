@@ -30,7 +30,6 @@ public class NameTagManager {
 
 	private final Function<Entity, Team> teamCallback;
 
-	@SuppressWarnings("UnstableApiUsage")
 	public NameTagManager(EventNode<Event> node, Function<Entity, Team> teamCallback) {
 		this.teamCallback = teamCallback;
 		EventListener<PlayerRespawnEvent> respawnListener = EventListener.builder(PlayerRespawnEvent.class)
