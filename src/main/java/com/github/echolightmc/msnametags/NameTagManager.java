@@ -26,7 +26,7 @@ public class NameTagManager {
 	/**
 	 * Tag to be set on entities which type is a player, so it can be properly added to its team.
 	 */
-	public static final Tag<String> USERNAME_TAG = Tag.String("msnametags-username");
+	public static final Tag<String> USERNAME_TAG = Tag.String("msnametags.username");
 
 	private final Function<Entity, Team> teamCallback;
 
@@ -38,9 +38,7 @@ public class NameTagManager {
 					if (!hasNameTag(player)) return;
 					MinecraftServer.getSchedulerManager().scheduleNextTick(() -> {
 						NameTag nameTag = getNameTag(player);
-						if (nameTag != null) {
-							nameTag.mount();
-						}
+						if (nameTag != null) nameTag.mount();
 					});
 				})
 				.build();
@@ -50,14 +48,7 @@ public class NameTagManager {
 					Entity entity = event.getEntity();
 					Instance instance = event.getInstance();
 					NameTag nameTag = getNameTag(entity);
-					if (nameTag != null) {
-						if (instance != nameTag.getInstance()) nameTag.mount();
-					}
-					// passengers fix for this player joining to see passengers of online players
-					if (!(entity instanceof Player player)) return;
-					for (Entity e : instance.getEntities()) {
-						player.sendPacket(getPassengersPacket(e));
-					}
+					if (nameTag != null && instance != nameTag.getInstance()) nameTag.mount();
 				})
 				.build();
 		node.addListener(spawnListener);
@@ -94,27 +85,39 @@ public class NameTagManager {
 	 * @return the created nametag for the entity, or current nametag if it already exists
 	 */
 	public @NotNull NameTag createNameTag(Entity entity) {
-		return createNameTag(entity, true);
+		return createNameTag(entity, true, true);
 	}
 
 	/**
-	 * Creates a nametag for the provided entity and automatically keeps it attached.
+	 * Creates a nametag for the provided entity with a transparent background and automatically keeps it attached.
 	 *
 	 * @param entity the entity to create a nametag for
 	 * @param transparentBackground whether the background of the nametag should be transparent or not
 	 * @return the created nametag for the entity, or current nametag if it already exists
 	 */
-	@SuppressWarnings("DataFlowIssue") // getNameTag() can't be null here due to hasNameTag check
 	public @NotNull NameTag createNameTag(Entity entity, boolean transparentBackground) {
-		if (hasNameTag(entity)) return getNameTag(entity);
-		NameTag nameTag = new NameTag(entity, transparentBackground);
-		entity.setTag(NAME_TAG, nameTag);
-		Team nameTagTeam = teamCallback.apply(entity);
-		nameTagTeam.setNameTagVisibility(TeamsPacket.NameTagVisibility.NEVER);
-		if (entity.getEntityType() == EntityType.PLAYER) {
-			if (entity instanceof Player player) nameTagTeam.addMember(player.getUsername());
-			else if (entity.hasTag(USERNAME_TAG)) nameTagTeam.addMember(entity.getTag(USERNAME_TAG));
-		} else nameTagTeam.addMember(entity.getUuid().toString());
+		return createNameTag(entity, transparentBackground, true);
+	}
+
+	/**
+	 * Creates a nametag for the provided entity and automatically keeps it attached.
+	 *
+	 * @param owner the entity to create a nametag for
+	 * @param transparentBackground whether the background of the nametag should be transparent or not
+	 * @param handleSneaking whether the nametag will be hidden if the owner is sneaking or not
+	 * @return the created nametag for the entity, or current nametag if it already exists
+	 */
+	@SuppressWarnings("DataFlowIssue") // getNameTag() can't be null here due to hasNameTag check
+	public @NotNull NameTag createNameTag(Entity owner, boolean transparentBackground, boolean handleSneaking) {
+		if (hasNameTag(owner)) return getNameTag(owner);
+		NameTag nameTag = new NameTag(owner, transparentBackground, handleSneaking);
+		owner.setTag(NAME_TAG, nameTag);
+		Team nameTagTeam = teamCallback.apply(owner);
+		nameTagTeam.updateNameTagVisibility(TeamsPacket.NameTagVisibility.NEVER);
+		if (owner.getEntityType() == EntityType.PLAYER) {
+			if (owner instanceof Player player) nameTagTeam.addMember(player.getUsername());
+			else if (owner.hasTag(USERNAME_TAG)) nameTagTeam.addMember(owner.getTag(USERNAME_TAG));
+		} else nameTagTeam.addMember(owner.getUuid().toString());
 		return nameTag;
 	}
 

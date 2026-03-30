@@ -19,10 +19,12 @@ public class NameTag extends Entity {
 
 	private final Entity owningEntity;
 	private final TextDisplayMeta textMeta;
+	private final boolean handleSneaking;
 
-	NameTag(Entity owningEntity, boolean transparentBackground) {
+	NameTag(Entity owningEntity, boolean transparentBackground, boolean handleSneaking) {
 		super(EntityType.TEXT_DISPLAY);
 		this.owningEntity = owningEntity;
+		this.handleSneaking = handleSneaking;
 		hasPhysics = false;
 		collidesWithEntities = false;
 		textMeta = getEntityMeta();
@@ -82,14 +84,13 @@ public class NameTag extends Entity {
 	@Override
 	public void tick(long time) { // don't do anything in super tick as it's unnecessary
 		if (isRemoved()) return;
-		for (Player player : getInstance().getPlayers()) {
-			if (player == owningEntity) continue;
-			Set<Player> viewers = getViewers();
-			if (!viewers.contains(player) && (owningEntity.isViewer(player) && !owningEntity.isSneaking())) {
-				addViewer(player);
-			} else if (viewers.contains(player) && (!owningEntity.isViewer(player) || owningEntity.isSneaking())){
-				removeViewer(player);
-			}
+		if (!handleSneaking) return;
+		for (Player player : instance.getPlayers()) {
+			if (player.equals(owningEntity)) continue;
+			Set<Player> viewers = this.viewers;
+			if (!viewers.contains(player) && (owningEntity.isViewer(player) && !owningEntity.isSneaking())) addViewer(player);
+			else if (viewers.contains(player) && (!owningEntity.isViewer(player) || owningEntity.isSneaking())) removeViewer(player);
+
 		}
 	}
 
@@ -98,6 +99,14 @@ public class NameTag extends Entity {
 	public void updateNewViewer(@NotNull Player player) {
 		super.updateNewViewer(player);
 		player.sendPacket(NameTagManager.getPassengersPacket(owningEntity)); // necessary otherwise it's not a passenger visually
+	}
+
+	@Override
+	protected void remove(boolean permanent) {
+		super.remove(permanent);
+		for (Player player : viewers) {
+			removeViewer(player);
+		}
 	}
 
 	/**
