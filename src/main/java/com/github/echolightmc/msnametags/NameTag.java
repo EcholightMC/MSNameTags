@@ -103,10 +103,11 @@ public class NameTag extends Entity {
 
 	@Override
 	protected void remove(boolean permanent) {
-		super.remove(permanent);
+		// update viewers before removal, since super.remove() clears the viewers list
 		for (Player player : viewers) {
-			removeViewer(player);
+			updateOldViewer(player); // use update instead of removeViewer to force entity destruction
 		}
+		super.remove(permanent);
 	}
 
 	/**
