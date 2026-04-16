@@ -32,7 +32,7 @@ repositories {
 ```gradle
 dependencies {
   ..
-  implementation("com.github.echolightmc:MSNameTags:1.7-SNAPSHOT") {
+  implementation("com.github.echolightmc:MSNameTags:1.8-SNAPSHOT") {
     exclude group: "net.minestom", module: "minestom"
   }
 }
